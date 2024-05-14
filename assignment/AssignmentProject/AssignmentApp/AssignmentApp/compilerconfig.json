@@ -22,5 +22,9 @@
   {
     "outputFile": "Components/Pages/SingleCourse.razor.css",
     "inputFile": "Components/Pages/SingleCourse.razor.scss"
+  },
+  {
+    "outputFile": "Components/AccountSidebar.razor.css",
+    "inputFile": "Components/AccountSidebar.razor.scss"
   }
 ]

@@ -24,23 +24,23 @@ header .header-container nav .nav-container {
   align-items: center;
   height: 100%;
 }
-header .header-container nav .nav-container .logo {
+header .header-container nav .nav-container ::deep .logo {
   margin: 0 40px 0 0;
   display: flex;
   align-items: center;
 }
 @media only screen and (max-width: 1400px) {
-  header .header-container nav .nav-container .logo {
+  header .header-container nav .nav-container ::deep .logo {
     margin: 0 10px;
   }
 }
 @media only screen and (max-width: 992px) {
-  header .header-container nav .nav-container .logo {
+  header .header-container nav .nav-container ::deep .logo {
     width: 100px;
   }
 }
 @media only screen and (max-width: 768px) {
-  header .header-container nav .nav-container .logo {
+  header .header-container nav .nav-container ::deep .logo {
     width: auto;
   }
 }

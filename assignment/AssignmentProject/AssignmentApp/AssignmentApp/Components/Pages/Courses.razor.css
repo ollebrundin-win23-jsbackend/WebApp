@@ -30,11 +30,11 @@
   font-size: 10px;
   margin: 0 14px;
 }
-.courses .breadcrumbs a {
+.courses .breadcrumbs ::deep a {
   color: #9397AD;
   font-size: 14px;
 }
-.courses .breadcrumbs a:hover {
+.courses .breadcrumbs ::deep a:hover {
   text-decoration: underline;
 }
 .courses .breadcrumbs p {

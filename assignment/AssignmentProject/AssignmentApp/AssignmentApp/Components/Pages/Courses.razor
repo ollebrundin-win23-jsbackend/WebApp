@@ -1,0 +1,48 @@
+﻿@page "/Courses"
+
+<section class="courses">
+    <div class="breadcrumbs">
+        <i class="fa-regular fa-house"></i>
+        <NavLink href="/">Home</NavLink>
+        <i class="fa-regular fa-chevrons-right"></i>
+        <p>Courses</p>
+    </div>
+    <div class="heading-and-categories">
+        <h1>Courses</h1>
+        <div class="inputs">
+            <div class="select-container">
+                <select id="category-selection">
+                    <option value=0 selected>All categories</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="search-courses" type="text" placeholder="Search courses">
+            </div>
+        </div>
+    </div>
+    <div id="courses-grid" class="courses-grid">
+        <CourseCard />
+    </div>
+    <div id="pagnation" class="pagnation">
+        <button><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="active">1</button>
+        <button><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+<section class="work-with-us">
+    <div class="work-with-us-container">
+        <div class="flex">
+            <div class="flex-container">
+                <p>Ready to get started?</p>
+                <h2>Take Your <span>Skills</span> to the Next Level</h2>
+                <a href="" class="btn">Work with us</a>
+            </div>
+        </div>
+        <img src="/images/illustration.svg" alt="Illustration">
+    </div>
+</section>
+
+@code {
+
+}

@@ -1,0 +1,22 @@
+﻿[
+  {
+    "outputFile": "wwwroot/app.css",
+    "inputFile": "wwwroot/app.scss"
+  },
+  {
+    "outputFile": "Components/Header.razor.css",
+    "inputFile": "Components/Header.razor.scss"
+  },
+  {
+    "outputFile": "Components/Footer.razor.css",
+    "inputFile": "Components/Footer.razor.scss"
+  },
+  {
+    "outputFile": "Components/CourseCard.razor.css",
+    "inputFile": "Components/CourseCard.razor.scss"
+  },
+  {
+    "outputFile": "Components/Pages/Courses.razor.css",
+    "inputFile": "Components/Pages/Courses.razor.scss"
+  }
+]

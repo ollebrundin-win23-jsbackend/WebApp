@@ -52,8 +52,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Pages\Account\SignUp\" />
-  </ItemGroup>
-
 </Project>

@@ -1,0 +1,47 @@
+﻿@page "/Account/SignUp"
+@using NewAssignmentWebApp.Models
+
+<section id="sign-up" class="sign-up">
+    <h1>Create Account</h1>
+    <p class="sign-in-here">Already have an account? <a href="/Account/SignIn">Sign in here.</a></p>
+    <EditForm Model="Model" method="post" OnValidSubmit="SignUpUser" FormName="sign-up" novalidate>
+        <DataAnnotationsValidator />
+        <div class="name-container">
+            <div>
+                <label for="first-name">First name</label>
+                <InputText @bind-Value="Model.FirstName" class="text-input" aria-required="true" placeholder="First name" />
+                <ValidationMessage For="() => Model.FirstName" />
+            </div>
+            <div>
+                <label for="last-name">Last name</label>
+                <InputText @bind-Value="Model.LastName" class="text-input" aria-required="true" placeholder="Last name" />
+                <ValidationMessage For="() => Model.LastName" />
+            </div>
+        </div>
+        <label for="email">Email</label>
+        <InputText @bind-Value="Model.Email" type="email" class="text-input" aria-required="true" placeholder="user@domain.com" />
+        <ValidationMessage For="() => Model.Email" />
+        <label for="password">Password</label>
+        <InputText @bind-Value="Model.Password" type="password" class="text-input" aria-required="true" placeholder="********" />
+        <ValidationMessage For="() => Model.Password" />
+        <label for="confirm-password">Confirm password</label>
+        <InputText @bind-Value="Model.ConfirmPassword" type="password" class="text-input" aria-required="true" placeholder="********" />
+        <ValidationMessage For="() => Model.ConfirmPassword" />
+        <p class="error-message">
+            @errorMessage
+        </p>
+        <button type="submit" class="btn">Sign up</button>
+    </EditForm>
+</section>
+
+@code{
+    [SupplyParameterFromForm]
+    private SignUpModel Model { get; set; } = new SignUpModel();
+
+    private string? errorMessage;
+
+    private void SignUpUser()
+    {
+        errorMessage = "fel";
+    }
+}

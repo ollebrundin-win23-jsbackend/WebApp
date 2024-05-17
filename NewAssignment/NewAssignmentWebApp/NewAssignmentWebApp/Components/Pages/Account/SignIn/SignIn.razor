@@ -1,7 +1,6 @@
 ﻿@page "/Account/SignIn"
 @using Microsoft.AspNetCore.Authorization
 @using NewAssignmentWebApp.Models
-@attribute [AllowAnonymous]
 
 <PageTitle>Sign In</PageTitle>
 
@@ -11,10 +10,10 @@
     <EditForm Model="Model" method="post" OnValidSubmit="SignInUser" FormName="sign-in" novalidate>
         <DataAnnotationsValidator />
         <label for="email">Email</label>
-        <InputText @bind-Value="Model.Email" class="text-input" aria-required="true" placeholder="user@domain.com" />
+        <InputText @bind-Value="Model.Email" type="email" class="text-input" aria-required="true" placeholder="user@domain.com" />
         <ValidationMessage For="() => Model.Email" />
         <label for="password">Password</label>
-        <InputText @bind-Value="Model.Password" class="text-input" aria-required="true" placeholder="********" />
+        <InputText @bind-Value="Model.Password" type="password" class="text-input" aria-required="true" placeholder="********" />
         <ValidationMessage For="() => Model.Password" />
         <div class="remember-me-container">
             <InputCheckbox @bind-Value="Model.RememberMe" data-val="" data-val-required="" />

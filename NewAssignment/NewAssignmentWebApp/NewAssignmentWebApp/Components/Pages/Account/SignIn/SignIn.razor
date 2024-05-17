@@ -1,9 +1,50 @@
 ﻿@page "/Account/SignIn"
 @using Microsoft.AspNetCore.Authorization
+@using NewAssignmentWebApp.Models
 @attribute [AllowAnonymous]
 
-<h3>SignIn</h3>
+<PageTitle>Sign In</PageTitle>
+
+<section id="sign-in" class="sign-in">
+    <h1>Welcome Back</h1>
+    <p class="sign-up-here">Don't have an account yet? <a href="/Account/SignUp">Sign up here.</a></p>
+    <EditForm Model="Model" method="post" OnValidSubmit="SignInUser" FormName="sign-in" novalidate>
+        <DataAnnotationsValidator />
+        <label for="email">Email</label>
+        <InputText @bind-Value="Model.Email" class="text-input" aria-required="true" placeholder="user@domain.com" />
+        <ValidationMessage For="() => Model.Email" />
+        <label for="password">Password</label>
+        <InputText @bind-Value="Model.Password" class="text-input" aria-required="true" placeholder="********" />
+        <ValidationMessage For="() => Model.Password" />
+        <div class="remember-me-container">
+            <InputCheckbox @bind-Value="Model.RememberMe" data-val="" data-val-required="" />
+            <label for="rememberme">Remember me</label>
+        </div>
+        <p class="error-message">
+            @errorMessage
+        </p>
+        <button type="submit" class="btn">Sign in</button>
+        <div class="forgot-password-container">
+            <a href="">Forgot your password?</a>
+        </div>
+        <div class="socials-container">
+            <p>Or sign in with your social network</p>
+            <div>
+                <a class="btn light" href=""><i class="fa-brands fa-google"></i>Google</a>
+                <a class="btn light" href=""><i class="fa-brands fa-facebook-f"></i>Facebook</a>
+            </div>
+        </div>
+    </EditForm>
+</section>
 
 @code {
+    [SupplyParameterFromForm]
+    private SignInModel Model { get; set; } = new SignInModel();
 
+    private string? errorMessage;
+
+    private void SignInUser()
+    {
+        errorMessage = "fel";
+    }
 }

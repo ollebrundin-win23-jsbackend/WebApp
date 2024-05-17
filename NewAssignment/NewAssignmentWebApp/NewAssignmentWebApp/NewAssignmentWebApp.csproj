@@ -8,6 +8,42 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\images\404.svg" />
+    <None Include="wwwroot\images\404_darkmode.svg" />
+    <None Include="wwwroot\images\analytics.svg" />
+    <None Include="wwwroot\images\appstore.svg" />
+    <None Include="wwwroot\images\assignees.svg" />
+    <None Include="wwwroot\images\authorpattern.svg" />
+    <None Include="wwwroot\images\camera-logo.svg" />
+    <None Include="wwwroot\images\colors-logo.svg" />
+    <None Include="wwwroot\images\comments.svg" />
+    <None Include="wwwroot\images\dropbox.svg" />
+    <None Include="wwwroot\images\elephant-logo.svg" />
+    <None Include="wwwroot\images\gmail.svg" />
+    <None Include="wwwroot\images\google.svg" />
+    <None Include="wwwroot\images\googleplay.svg" />
+    <None Include="wwwroot\images\idk-logo.svg" />
+    <None Include="wwwroot\images\illustration.svg" />
+    <None Include="wwwroot\images\logo.svg" />
+    <None Include="wwwroot\images\logoipsum.svg" />
+    <None Include="wwwroot\images\logoipsum2.svg" />
+    <None Include="wwwroot\images\logoipsum3.svg" />
+    <None Include="wwwroot\images\logoipsum4.svg" />
+    <None Include="wwwroot\images\logo_darkmode.svg" />
+    <None Include="wwwroot\images\monkey-logo.svg" />
+    <None Include="wwwroot\images\notifications.svg" />
+    <None Include="wwwroot\images\security.svg" />
+    <None Include="wwwroot\images\slider.svg" />
+    <None Include="wwwroot\images\squiggle.svg" />
+    <None Include="wwwroot\images\tasks.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NewAssignmentWebApp.Client\NewAssignmentWebApp.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />

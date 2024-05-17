@@ -1,0 +1,1 @@
+﻿button{display:none;background-color:transparent;border:0;border-radius:3px;cursor:pointer;font-size:42px;padding:0 5px;}@media only screen and (max-width:768px){button{display:block;}}button:hover{background-color:rgba(245,245,245,.979);}

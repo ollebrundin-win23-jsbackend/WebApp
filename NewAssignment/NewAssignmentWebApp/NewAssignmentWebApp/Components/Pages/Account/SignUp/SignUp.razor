@@ -9,23 +9,23 @@
         <div class="name-container">
             <div>
                 <label for="first-name">First name</label>
-                <InputText @bind-Value="Model.FirstName" class="text-input" aria-required="true" placeholder="First name" />
+                <InputText @bind-Value="Model.FirstName" class="text-input" id="first-name" aria-required="true" placeholder="First name" />
                 <ValidationMessage For="() => Model.FirstName" />
             </div>
             <div>
                 <label for="last-name">Last name</label>
-                <InputText @bind-Value="Model.LastName" class="text-input" aria-required="true" placeholder="Last name" />
+                <InputText @bind-Value="Model.LastName" class="text-input" id="last-name" aria-required="true" placeholder="Last name" />
                 <ValidationMessage For="() => Model.LastName" />
             </div>
         </div>
         <label for="email">Email</label>
-        <InputText @bind-Value="Model.Email" type="email" class="text-input" aria-required="true" placeholder="user@domain.com" />
+        <InputText @bind-Value="Model.Email" type="email" class="text-input" id="email" aria-required="true" placeholder="user@domain.com" />
         <ValidationMessage For="() => Model.Email" />
         <label for="password">Password</label>
-        <InputText @bind-Value="Model.Password" type="password" class="text-input" aria-required="true" placeholder="********" />
+        <InputText @bind-Value="Model.Password" type="password" class="text-input" id="password" aria-required="true" placeholder="********" />
         <ValidationMessage For="() => Model.Password" />
         <label for="confirm-password">Confirm password</label>
-        <InputText @bind-Value="Model.ConfirmPassword" type="password" class="text-input" aria-required="true" placeholder="********" />
+        <InputText @bind-Value="Model.ConfirmPassword" type="password" class="text-input" id="confirm-password" aria-required="true" placeholder="********" />
         <ValidationMessage For="() => Model.ConfirmPassword" />
         <p class="error-message">
             @errorMessage

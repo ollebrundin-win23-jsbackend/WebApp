@@ -10,14 +10,14 @@
     <EditForm Model="Model" method="post" OnValidSubmit="SignInUser" FormName="sign-in" novalidate>
         <DataAnnotationsValidator />
         <label for="email">Email</label>
-        <InputText @bind-Value="Model.Email" type="email" class="text-input" aria-required="true" placeholder="user@domain.com" />
+        <InputText @bind-Value="Model.Email" type="email" class="text-input" id="email" aria-required="true" placeholder="user@domain.com" />
         <ValidationMessage For="() => Model.Email" />
         <label for="password">Password</label>
-        <InputText @bind-Value="Model.Password" type="password" class="text-input" aria-required="true" placeholder="********" />
+        <InputText @bind-Value="Model.Password" type="password" class="text-input" id="password" aria-required="true" placeholder="********" />
         <ValidationMessage For="() => Model.Password" />
         <div class="remember-me-container">
-            <InputCheckbox @bind-Value="Model.RememberMe" data-val="" data-val-required="" />
-            <label for="rememberme">Remember me</label>
+            <InputCheckbox @bind-Value="Model.RememberMe" id="remember-me" data-val="" data-val-required="" />
+            <label for="remember-me">Remember me</label>
         </div>
         <p class="error-message">
             @errorMessage

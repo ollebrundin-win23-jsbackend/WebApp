@@ -1,40 +1,48 @@
 ﻿@page "/Account/SignIn"
-@using Microsoft.AspNetCore.Authorization
-@using NewAssignmentWebApp.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject ApplicationDbContext Context
+@inject NavigationManager NavigationManager
 
 <PageTitle>Sign In</PageTitle>
 
-<section id="sign-in" class="sign-in">
-    <h1>Welcome Back</h1>
-    <p class="sign-up-here">Don't have an account yet? <a href="/Account/SignUp">Sign up here.</a></p>
-    <EditForm Model="Model" method="post" OnValidSubmit="SignInUser" FormName="sign-in" novalidate>
-        <DataAnnotationsValidator />
-        <label for="email">Email</label>
-        <InputText @bind-Value="Model.Email" type="email" class="text-input" id="email" aria-required="true" placeholder="user@domain.com" />
-        <ValidationMessage For="() => Model.Email" />
-        <label for="password">Password</label>
-        <InputText @bind-Value="Model.Password" type="password" class="text-input" id="password" aria-required="true" placeholder="********" />
-        <ValidationMessage For="() => Model.Password" />
-        <div class="remember-me-container">
-            <InputCheckbox @bind-Value="Model.RememberMe" id="remember-me" data-val="" data-val-required="" />
-            <label for="remember-me">Remember me</label>
-        </div>
-        <p class="error-message">
-            @errorMessage
-        </p>
-        <button type="submit" class="btn">Sign in</button>
-        <div class="forgot-password-container">
-            <a href="">Forgot your password?</a>
-        </div>
-        <div class="socials-container">
-            <p>Or sign in with your social network</p>
-            <div>
-                <a class="btn light" href=""><i class="fa-brands fa-google"></i>Google</a>
-                <a class="btn light" href=""><i class="fa-brands fa-facebook-f"></i>Facebook</a>
-            </div>
-        </div>
-    </EditForm>
-</section>
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <RedirectToAccountPage />
+    </Authorized>
+    <NotAuthorized>
+        <section id="sign-in" class="sign-in">
+            <h1>Welcome Back</h1>
+            <p class="sign-up-here">Don't have an account yet? <a href="/Account/SignUp">Sign up here.</a></p>
+            <EditForm Model="Model" method="post" OnValidSubmit="SignInUser" FormName="sign-in" novalidate>
+                <DataAnnotationsValidator />
+                <label for="email">Email</label>
+                <InputText @bind-Value="Model.Email" type="email" class="text-input" id="email" aria-required="true" placeholder="user@domain.com" />
+                <ValidationMessage For="() => Model.Email" />
+                <label for="password">Password</label>
+                <InputText @bind-Value="Model.Password" type="password" class="text-input" id="password" aria-required="true" placeholder="********" />
+                <ValidationMessage For="() => Model.Password" />
+                <div class="remember-me-container">
+                    <InputCheckbox @bind-Value="Model.RememberMe" id="remember-me" data-val="" data-val-required="" />
+                    <label for="remember-me">Remember me</label>
+                </div>
+                <p class="error-message">
+                    @errorMessage
+                </p>
+                <button type="submit" class="btn">Sign in</button>
+                <div class="forgot-password-container">
+                    <a href="">Forgot your password?</a>
+                </div>
+                <div class="socials-container">
+                    <p>Or sign in with your social network</p>
+                    <div>
+                        <a class="btn light" href=""><i class="fa-brands fa-google"></i>Google</a>
+                        <a class="btn light" href=""><i class="fa-brands fa-facebook-f"></i>Facebook</a>
+                    </div>
+                </div>
+            </EditForm>
+        </section>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [SupplyParameterFromForm]
@@ -42,8 +50,16 @@
 
     private string? errorMessage;
 
-    private void SignInUser()
+    public async Task SignInUser(EditContext editContext)
     {
-        errorMessage = "fel";
+        var result = await SignInManager.PasswordSignInAsync(Model.Email, Model.Password, true, false);
+
+        if (!result.Succeeded)
+        {
+            errorMessage = "Invalid login.";
+            return;
+        }
+
+        NavigationManager.NavigateTo("/");
     }
 }

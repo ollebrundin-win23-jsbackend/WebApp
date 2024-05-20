@@ -1,0 +1,9 @@
+﻿@inject NavigationManager NavigationManager
+
+@code {
+    protected override async Task OnInitializedAsync() //En bugg i Blazor sker om man bara kör OnInitialized utan async
+    {
+        await base.OnInitializedAsync(); //Här kallar vi bas implementationen av OnInitializedAsync först, både för att vi behöver en await operator i metoden för att den inte ska klaga, men även för att vi vill "extenda" metoden, och inte skriva över hela (dock är bas metoden nog tom i detta fallet)
+        NavigationManager.NavigateTo("Account/Details", true);
+    }
+}

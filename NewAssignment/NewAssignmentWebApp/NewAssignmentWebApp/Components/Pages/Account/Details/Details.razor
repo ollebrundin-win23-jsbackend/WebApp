@@ -1,0 +1,156 @@
+﻿@page "/Account/Details"
+
+@inject UserRepo UserRepo
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthState
+@inject NavigationManager NavigationManager
+
+<PageTitle>Account Details</PageTitle>
+
+<main>
+    <AccountSidebar />
+    <section class="details">
+        <h1>Account Details</h1>
+        <div id="basic-info-form" class="basic-info-form">
+            <h3>Basic Info</h3>
+            <EditForm Model="Model" method="post" OnValidSubmit="BasicInfoSubmit" FormName="basic-info-form" novalidate>
+                <DataAnnotationsValidator />
+                <InputCheckbox @bind-Value="Model.OnInitAlreadyLoaded" id="on-init-already-loaded" hidden /> @* För att inte OnInit metoden ska köras när man submittar formuläret så måste jag ha detta hidden fältet här, som är true när metoden redan har körts en gång *@
+                <div class="double-input-container">
+                    <div>
+                        <label for="first-name">First name</label>
+                        <InputText @bind-Value="Model.FirstName" type="text" class="text-input" id="first-name" aria-required="true" placeholder="First name" />
+                        <ValidationMessage For="() => Model.FirstName" />
+                    </div>
+                    <div>
+                        <label for="last-name">Last name</label>
+                        <InputText @bind-Value="Model.LastName" type="text" class="text-input" id="last-name" aria-required="true" placeholder="Last name" />
+                        <ValidationMessage For="() => Model.LastName" />
+                    </div>
+                </div>
+                <div class="double-input-container">
+                    <div>
+                        <label for="email">Email</label>
+                        <InputText @bind-Value="Model.Email" type="email" class="text-input" id="email" aria-required="false" readonly="readonly"/>
+                    </div>
+                    <div>
+                        <label for="phone">Phone</label>
+                        <InputText @bind-Value="Model.Phone" type="text" class="text-input" id="phone" aria-required="false" placeholder="Phone number" />
+                        <ValidationMessage For="() => Model.Phone" />
+                    </div>
+                </div>
+                <label for="bio">Bio <span>(optional)</span></label>
+                <InputTextArea @bind-Value="Model.Bio" type="text" class="text-input" id="bio" aria-required="false" placeholder="Bio" />
+                <p class="error-message">
+                    @basicErrorMessage
+                </p>
+                <div class="btn-container">
+                    <a class="btn light" href="/Account/Details">Cancel</a>
+                    <button type="submit" class="btn">Save changes</button>
+                </div>
+            </EditForm>
+        </div>
+        <div id="address-form" class="address-form">
+            <h3>Address</h3>
+            <EditForm Model="AddressModel" method="post" OnValidSubmit="AddressSubmit" FormName="address-form" novalidate>
+                <DataAnnotationsValidator />
+                <label for="address1">Address line 1</label>
+                <InputText @bind-Value="AddressModel.Address1" type="text" class="text-input" id="address1" aria-required="false" placeholder="Address line 1" />
+                <ValidationMessage For="() => AddressModel.Address1" />
+                <label for="address2">Address line 2 <span>(optional)</span></label>
+                <InputText @bind-Value="AddressModel.Address2" type="text" class="text-input" id="address2" aria-required="false" placeholder="Address line 2" />
+                <div class="double-input-container">
+                    <div>
+                        <label for="postal-code">Postal code</label>
+                        <InputText @bind-Value="AddressModel.PostalCode" type="text" class="text-input" id="postal-code" aria-required="false" placeholder="Postal code" />
+                        <ValidationMessage For="() => AddressModel.PostalCode" />
+                    </div>
+                    <div>
+                        <label for="city">City</label>
+                        <InputText @bind-Value="AddressModel.City" type="text" class="text-input" id="city" aria-required="false" placeholder="City" />
+                    </div>
+                </div>
+                <p class="error-message">
+                    @addressErrorMessage
+                </p>
+                <div class="btn-container">
+                    <a class="btn light" href="/Account/Details">Cancel</a>
+                    <button type="submit" class="btn">Save changes</button>
+                </div>
+            </EditForm>
+        </div>
+    </section>
+</main>
+
+
+@code {
+    private AuthenticationState? authState;
+    private ClaimsPrincipal? userClaims;
+    private ApplicationUser? userEntity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        authState = await AuthState.GetAuthenticationStateAsync(); //Hämta ut den nuvarande användarens authentication state
+        userClaims = authState.User; //Hämta användarinformationen
+
+        userEntity = await UserManager.GetUserAsync(userClaims);
+
+        if (!Model.OnInitAlreadyLoaded)
+        {
+            Model.FirstName = userEntity!.FirstName;
+            Model.LastName = userEntity!.LastName;
+            Model.Email = userEntity!.Email!;
+            Model.Phone = userEntity!.PhoneNumber;
+            Model.Bio = userEntity!.Bio;
+
+            Model.OnInitAlreadyLoaded = true;
+        }
+    }
+
+    [SupplyParameterFromForm(FormName = "basic-info-form")]
+    private BasicInfoFormModel Model { get; set; } = new BasicInfoFormModel();
+
+    [SupplyParameterFromForm(FormName = "address-form")]
+    private AddressFormModel AddressModel { get; set; } = new AddressFormModel();
+
+
+    private string? basicErrorMessage;
+    private string? addressErrorMessage;
+
+    public async Task BasicInfoSubmit(EditContext editContext)
+    {
+
+        if (userEntity != null)
+        {
+            userEntity.FirstName = Model.FirstName;
+            userEntity.LastName = Model.LastName;
+            userEntity.PhoneNumber = Model.Phone;
+            userEntity.Bio = Model.Bio;
+
+            var result = await UserManager.UpdateAsync(userEntity);
+
+            if (result.Succeeded)
+            {
+                NavigationManager.NavigateTo("/Account/Details");
+            }
+
+            else
+            {
+                basicErrorMessage = "Something went wrong.";
+                return;
+            }
+        }
+
+        else
+        {
+            basicErrorMessage = "Something went wrong.";
+            return;
+        }
+
+    }
+
+    public void AddressSubmit(EditContext editContext)
+    {
+        addressErrorMessage = "fel";
+    }
+}

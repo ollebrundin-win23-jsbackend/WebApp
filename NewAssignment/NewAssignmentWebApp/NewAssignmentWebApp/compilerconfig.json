@@ -22,5 +22,13 @@
   {
     "outputFile": "Components/Pages/Account/SignUp/SIgnUp.razor.css",
     "inputFile": "Components/Pages/Account/SignUp/SIgnUp.razor.scss"
+  },
+  {
+    "outputFile": "Components/Account/AccountSidebar.razor.css",
+    "inputFile": "Components/Account/AccountSidebar.razor.scss"
+  },
+  {
+    "outputFile": "Components/Pages/Account/Details/Details.razor.css",
+    "inputFile": "Components/Pages/Account/Details/Details.razor.scss"
   }
 ]

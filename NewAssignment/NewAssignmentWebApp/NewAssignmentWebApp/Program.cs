@@ -5,6 +5,7 @@ using NewAssignmentWebApp;
 using NewAssignmentWebApp.Components;
 using NewAssignmentWebApp.Components.Account;
 using NewAssignmentWebApp.Data;
+using NewAssignmentWebApp.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.EventsType = typeof(CookieEvents);
 });
+
+builder.Services.AddScoped<UserRepo>();
 
 var app = builder.Build();
 

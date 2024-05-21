@@ -5,7 +5,6 @@ namespace NewAssignmentWebApp.Models
     public class AddressFormModel
     {
         [DataType(DataType.Text)]
-        [MinLength(2, ErrorMessage = "The entered address is invalid.")]
 
         public string? Address1 { get; set; }
 
@@ -14,7 +13,6 @@ namespace NewAssignmentWebApp.Models
         public string? Address2 { get; set; }
 
         [DataType(DataType.Text)]
-        [MinLength(2, ErrorMessage = "The entered postal code is invalid.")]
 
         public string? PostalCode { get; set; }
 
@@ -22,5 +20,7 @@ namespace NewAssignmentWebApp.Models
         //Finns städer med namn som är kortare än 2 bokstäver, så gör ingen MinLength här.
 
         public string? City { get; set; }
+
+        public bool OnInitAlreadyLoaded { get; set; } = false;
     }
 }

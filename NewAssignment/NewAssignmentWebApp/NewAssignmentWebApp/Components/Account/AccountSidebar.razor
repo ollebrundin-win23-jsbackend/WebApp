@@ -3,10 +3,24 @@
         <a href=""><i class="fa-solid fa-rotate-reverse"></i></a>
         <img src="/images/profile-pic.png" alt="Profile pic">
     </div>
-    <h3>User User</h3>
-    <p>user@domain.com</p>
+    <h3>
+        @FirstName @LastName
+    </h3>
+    <p>
+        @Email
+    </p>
     <NavLink class="sidebar-btn" href="/Account/Details"><i class="fa-regular fa-gear"></i>Account Details</NavLink>
     <NavLink class="sidebar-btn" href="/Courses"><i class="fa-regular fa-lock"></i>Security</NavLink>
     <NavLink class="sidebar-btn" href="/Courses"><i class="fa-regular fa-bookmark"></i>Saved Courses</NavLink>
     <NavLink class="sidebar-btn" href="/Courses"><i class="fa-regular fa-arrow-left-from-line"></i>Sign Out</NavLink>
 </section>
+
+
+@code{
+    [Parameter]
+    public string FirstName { get; set; } = "";
+    [Parameter]
+    public string LastName { get; set; } = "";
+    [Parameter]
+    public string Email { get; set; } = "";
+}

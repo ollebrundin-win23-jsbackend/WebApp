@@ -8,12 +8,20 @@
 <PageTitle>Account Details</PageTitle>
 
 <main>
-    <AccountSidebar />
+    @if (userEntity != null)
+    {
+        <AccountSidebar FirstName=@userEntity!.FirstName LastName=@userEntity.LastName Email=@userEntity.Email />
+    }
+
+    else
+    {
+        <AccountSidebar FirstName="" LastName="" Email="" />
+    }
     <section class="details">
         <h1>Account Details</h1>
         <div id="basic-info-form" class="basic-info-form">
             <h3>Basic Info</h3>
-            <EditForm Model="Model" method="post" OnValidSubmit="BasicInfoSubmit" FormName="basic-info-form" novalidate>
+            <EditForm Model="Model" method="post" OnValidSubmit="BasicInfoSubmit" OnInvalidSubmit="PopulateAddressForm" FormName="basic-info-form" novalidate>
                 <DataAnnotationsValidator />
                 <InputCheckbox @bind-Value="Model.OnInitAlreadyLoaded" id="on-init-already-loaded" hidden /> @* För att inte OnInit metoden ska köras när man submittar formuläret så måste jag ha detta hidden fältet här, som är true när metoden redan har körts en gång *@
                 <div class="double-input-container">
@@ -52,8 +60,9 @@
         </div>
         <div id="address-form" class="address-form">
             <h3>Address</h3>
-            <EditForm Model="AddressModel" method="post" OnValidSubmit="AddressSubmit" FormName="address-form" novalidate>
+            <EditForm Model="AddressModel" method="post" OnValidSubmit="AddressSubmit" OnInvalidSubmit="PopulateBasicInfoForm" FormName="address-form" novalidate>
                 <DataAnnotationsValidator />
+                <InputCheckbox @bind-Value="AddressModel.OnInitAlreadyLoaded" id="address-on-init-already-loaded" hidden />
                 <label for="address1">Address line 1</label>
                 <InputText @bind-Value="AddressModel.Address1" type="text" class="text-input" id="address1" aria-required="false" placeholder="Address line 1" />
                 <ValidationMessage For="() => AddressModel.Address1" />
@@ -93,9 +102,14 @@
         authState = await AuthState.GetAuthenticationStateAsync(); //Hämta ut den nuvarande användarens authentication state
         userClaims = authState.User; //Hämta användarinformationen
 
-        userEntity = await UserManager.GetUserAsync(userClaims);
+        userEntity = await UserRepo.GetOneAsync(x => x.UserName == userClaims.Identity!.Name);
 
-        if (!Model.OnInitAlreadyLoaded)
+        if(userEntity == null)
+        {
+            //Logga ut användaren
+        }
+
+        if (!Model.OnInitAlreadyLoaded && !AddressModel.OnInitAlreadyLoaded) //Om OnInit inte redan har körts (alltså om sidan inte ens har laddats in ännu) så populeras fälten
         {
             Model.FirstName = userEntity!.FirstName;
             Model.LastName = userEntity!.LastName;
@@ -104,6 +118,16 @@
             Model.Bio = userEntity!.Bio;
 
             Model.OnInitAlreadyLoaded = true;
+
+            if (userEntity.Address != null)
+            {
+                AddressModel.Address1 = userEntity.Address!.Address1;
+                AddressModel.Address2 = userEntity.Address!.Address2;
+                AddressModel.PostalCode = userEntity.Address!.PostalCode;
+                AddressModel.City = userEntity.Address!.City;
+            }
+
+            AddressModel.OnInitAlreadyLoaded = true;
         }
     }
 
@@ -119,26 +143,16 @@
 
     public async Task BasicInfoSubmit(EditContext editContext)
     {
+        userEntity!.FirstName = Model.FirstName;
+        userEntity.LastName = Model.LastName;
+        userEntity.PhoneNumber = Model.Phone;
+        userEntity.Bio = Model.Bio;
 
-        if (userEntity != null)
+        var result = await UserManager.UpdateAsync(userEntity);
+
+        if (result.Succeeded)
         {
-            userEntity.FirstName = Model.FirstName;
-            userEntity.LastName = Model.LastName;
-            userEntity.PhoneNumber = Model.Phone;
-            userEntity.Bio = Model.Bio;
-
-            var result = await UserManager.UpdateAsync(userEntity);
-
-            if (result.Succeeded)
-            {
-                NavigationManager.NavigateTo("/Account/Details");
-            }
-
-            else
-            {
-                basicErrorMessage = "Something went wrong.";
-                return;
-            }
+            NavigationManager.NavigateTo("/Account/Details");
         }
 
         else
@@ -149,8 +163,58 @@
 
     }
 
-    public void AddressSubmit(EditContext editContext)
+    public async Task AddressSubmit(EditContext editContext)
     {
-        addressErrorMessage = "fel";
+        if (userEntity!.Address == null) //Om användaren inte har nån address info
+        {
+            userEntity.Address = new AddressEntity()
+                {
+                    Address1 = AddressModel.Address1,
+                    Address2 = AddressModel.Address2,
+                    PostalCode = AddressModel.PostalCode,
+                    City = AddressModel.City
+                };
+        }
+
+        else
+        {
+            userEntity.Address.Address1 = AddressModel.Address1;
+            userEntity.Address.Address2 = AddressModel.Address2;
+            userEntity.Address.PostalCode = AddressModel.PostalCode;
+            userEntity.Address.City = AddressModel.City;
+        }
+
+        var result = await UserManager.UpdateAsync(userEntity);
+
+        if (result.Succeeded)
+        {
+            NavigationManager.NavigateTo("/Account/Details");
+        }
+
+        else
+        {
+            addressErrorMessage = "Something went wrong.";
+            return;
+        }
+    }
+
+    public void PopulateBasicInfoForm()
+    {
+        Model.FirstName = userEntity!.FirstName;
+        Model.LastName = userEntity!.LastName;
+        Model.Email = userEntity!.Email!;
+        Model.Phone = userEntity!.PhoneNumber;
+        Model.Bio = userEntity!.Bio;
+    }
+
+    public void PopulateAddressForm()
+    {
+        if (userEntity!.Address != null)
+        {
+            AddressModel.Address1 = userEntity.Address!.Address1;
+            AddressModel.Address2 = userEntity.Address!.Address2;
+            AddressModel.PostalCode = userEntity.Address!.PostalCode;
+            AddressModel.City = userEntity.Address!.City;
+        }
     }
 }

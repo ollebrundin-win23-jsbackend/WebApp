@@ -30,5 +30,9 @@
   {
     "outputFile": "Components/Pages/Account/Details/Details.razor.css",
     "inputFile": "Components/Pages/Account/Details/Details.razor.scss"
+  },
+  {
+    "outputFile": "Components/Pages/Account/Security/Security.razor.css",
+    "inputFile": "Components/Pages/Account/Security/Security.razor.scss"
   }
 ]

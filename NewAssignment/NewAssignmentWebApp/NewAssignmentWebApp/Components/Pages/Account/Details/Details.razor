@@ -1,9 +1,13 @@
 ﻿@page "/Account/Details"
+@using Microsoft.AspNetCore.Authorization
 
 @inject UserRepo UserRepo
 @inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 @inject AuthenticationStateProvider AuthState
 @inject NavigationManager NavigationManager
+
+@attribute [Authorize]
 
 <PageTitle>Account Details</PageTitle>
 
@@ -104,9 +108,10 @@
 
         userEntity = await UserRepo.GetOneAsync(x => x.UserName == userClaims.Identity!.Name);
 
-        if(userEntity == null)
+        if (userEntity == null) //Detta behövs nog inte, men har som en extra säkerhetsåtgärd
         {
-            //Logga ut användaren
+            await SignInManager.SignOutAsync();
+            NavigationManager.NavigateTo("/Account/SignIn");
         }
 
         if (!Model.OnInitAlreadyLoaded && !AddressModel.OnInitAlreadyLoaded) //Om OnInit inte redan har körts (alltså om sidan inte ens har laddats in ännu) så populeras fälten

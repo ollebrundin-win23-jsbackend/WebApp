@@ -5,6 +5,7 @@ using NewAssignmentWebApp;
 using NewAssignmentWebApp.Components;
 using NewAssignmentWebApp.Components.Account;
 using NewAssignmentWebApp.Data;
+using NewAssignmentWebApp.Helpers.Middlewares;
 using NewAssignmentWebApp.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<UserRepo>();
+builder.Services.AddScoped<AddressRepo>();
 
 var app = builder.Build();
 
@@ -65,6 +67,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseUserSessionValidation();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

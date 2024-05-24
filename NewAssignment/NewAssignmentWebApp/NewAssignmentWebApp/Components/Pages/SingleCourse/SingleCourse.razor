@@ -1,0 +1,209 @@
+﻿@inject HttpClient HttpClient
+@inject IConfiguration Configuration
+
+@page "/SingleCourse/{id:int}"
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
+@using Newtonsoft.Json
+@attribute [Authorize]
+
+<PageTitle>@Model.Title</PageTitle>
+
+<section class="course-heading" style="
+    background: linear-gradient(0deg, rgba(0, 2, 24, 0.6), rgba(0, 2, 24, 0.6)), url@($"('{Model.ImageUrl}')");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+"> @* Jag vet att ovanstående sätt att ladda in en sådan bild på inte är helt vettigt, men men *@
+    <div class="course-heading-container">
+        <div class="breadcrumbs">
+            <i class="fa-regular fa-house"></i>
+            <a class="home" href="/">Home</a>
+            <i class="fa-regular fa-chevrons-right"></i>
+            <a href="/Courses">Courses</a>
+            <i class="fa-regular fa-chevrons-right"></i>
+            <p>@Model.Title</p>
+        </div>
+        <div class="tags">
+
+            @if (Model.IsBestSeller)
+            {
+                <p class="best-seller">Best Seller</p>
+            }
+
+            <p>Digital</p>
+        </div>
+        <h1>@Model.Title</h1>
+        <p>@Model.HeaderDescription</p>
+        <div class="info">
+            <div class="reviews">
+
+                @if (Model.Rating != null)
+                {
+                    for (int i = 0; i < Model.Rating && i < 5; i++)
+                    {
+                        <i class="fa-solid fa-star"></i>
+                    }
+
+                    for (int i = 0; i < (5 - Model.Rating); i++)
+                    {
+                        <i class="fa-regular fa-star"></i>
+                    }
+                }
+
+                @if (Model.Reviews != null)
+                {
+                    <p>(@(Model.Reviews / 1000)K reviews)</p>
+                }
+                
+            </div>
+            <div class="likes">
+                <i class="fa-regular fa-thumbs-up"></i>
+
+                @if (Model.Likes != null)
+                {
+                    <p>@(Model.Likes / 1000)K likes</p>
+                }
+
+            </div>
+            <div class="length">
+                <i class="fa-regular fa-clock"></i>
+                <p>@Model.Hours hours</p>
+            </div>
+        </div>
+        <div class="author">
+            <img src="/images/profile-pic.png" alt="Author">
+            <div>
+                <p>Created by</p>
+                <p class="name">@Model.Author</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="course-intro">
+    <div class="course-intro-container">
+        <div class="description-container">
+            <h2>Course Description</h2>
+            <p>@Model.Description</p>
+            <h3>What you'll learn</h3>
+            <p><i class="fa-regular fa-circle-check"></i>Sed lectus donec amet eu turpis interdum.</p>
+            <p><i class="fa-regular fa-circle-check"></i>Nulla at consectetur vitae dignissim porttitor.</p>
+            <p><i class="fa-regular fa-circle-check"></i>Phasellus id vitae dui aliquet mi.</p>
+            <p><i class="fa-regular fa-circle-check"></i>Integer cursus vitae, odio feugiat iaculis aliquet diam, et purus.</p>
+            <p><i class="fa-regular fa-circle-check"></i>In aenean dolor diam tortor orci eu.</p>
+        </div>
+        <div id="card" class="card">
+            <h4>This course includes:</h4>
+            <p><i class="fa-regular fa-play"></i>@Model.Hours hours on-demand video</p>
+            <p><i class="fa-regular fa-file-lines"></i>18 articles</p>
+            <p><i class="fa-regular fa-download"></i>25 downloadable resources</p>
+            <p><i class="fa-regular fa-infinity"></i>Full lifetime access</p>
+            <p><i class="fa-regular fa-trophy"></i>Certificate of completion</p>
+
+            @if (Model.DiscountedPrice != null)
+            {
+                <p class="discounted-price">$@Model.DiscountedPrice <span>$@Model.Price</span></p>
+            }
+
+            else
+            {
+                <p class="price">$@Model.Price</p>
+            }
+
+            <button class="btn">Join course</button>
+        </div>
+    </div>
+</section>
+<section class="program-details">
+    <div class="program-details-container">
+        <h2>Program Details</h2>
+        <div class="details-container">
+            <p class="number">1</p>
+            <div>
+                <h4>Introduction. Getting started</h4>
+                <p>Nulla faucibus mauris pellentesque blandit faucibus non. Sit ut et at suspendisse gravida hendrerit tempus placerat.</p>
+            </div>
+        </div>
+        <div class="details-container">
+            <p class="number">2</p>
+            <div>
+                <h4>The ultimate HTML developer: advanced HTML</h4>
+                <p>Lobortis diam elit id nibh ultrices sed penatibus donec. Nibh iaculis eu sit cras ultricies. Nam eu eget etiam egestas donec scelerisque ut ac enim. Vitae ac nisl, enim nec accumsan vitae est.</p>
+            </div>
+        </div>
+        <div class="details-container">
+            <p class="number">3</p>
+            <div>
+                <h4>CSS & CSS3: basic</h4>
+                <p>Duis euismod enim, facilisis risus tellus pharetra lectus diam neque. Nec ultrices mi faucibus est. Magna ullamcorper potenti elementum ultricies auctor nec volutpat augue.</p>
+            </div>
+        </div>
+        <div class="details-container">
+            <p class="number">4</p>
+            <div>
+                <h4>JavaScript basics for beginners</h4>
+                <p>Morbi porttitor risus imperdiet a, nisl mattis. Amet, faucibus eget in platea vitae, velit, erat eget velit. At lacus ut proin erat.</p>
+            </div>
+        </div>
+        <div class="details-container">
+            <p class="number">5</p>
+            <div>
+                <h4>Understanding APIs</h4>
+                <p>Risus morbi euismod in congue scelerisque fusce pellentesque diam consequat. Nisi mauris nibh sed est morbi amet arcu urna. Malesuada feugiat quisque consectetur elementum diam vitae. Dictumst facilisis odio eu quis maecenas risus odio fames bibendum.</p>
+            </div>
+        </div>
+        <div class="details-container">
+            <p class="number">6</p>
+            <div>
+                <h4>C# and .NET from beginner to advanced</h4>
+                <p>Quis risus quisque diam diam. Volutpat neque eget eu faucibus sed urna fermentum risus. Est, mauris morbi nibh massa.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="about-the-author">
+    <div class="about-the-author-container">
+        <img src="/images/profile-pic.png" alt="Author">
+        <div class="author-info">
+            <p class="learn">Learn from the best</p>
+            <h2>@Model.Author</h2>
+            <p class="bio">Dolor ipsum amet cursus quisque porta adipiscing. Lorem convallis malesuada sed maecenas. Ac dui at vitae mauris cursus in nullam porta sem. Quis pellentesque elementum ac bibendum. Nunc aliquam in tortor facilisis. Vulputate eget risus, metus phasellus. Pellentesque faucibus amet, eleifend diam quam condimentum convallis ultricies placerat. Duis habitasse placerat amet, odio pellentesque rhoncus, feugiat at. Eget pellentesque tristique felis magna fringilla.</p>
+            <div>
+                <a class="btn youtube" href="https://www.youtube.com/"><i class="fa-brands fa-youtube"></i>240k subscribers</a>
+                <a class="btn facebook" href="https://www.facebook.com/"><i class="fa-brands fa-square-facebook"></i>180k followers</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private SingleCourseModel Model { get; set; } = new SingleCourseModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var tokenResult = await HttpClient.GetAsync(Configuration.GetValue<string>("TokenProviderUrl")); //Vi gör en GET request till vår TokenProvider för att hämta vår token.
+            var token = await tokenResult.Content.ReadAsStringAsync(); //Vår token lagras som en sträng.
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);//Och sätts sedan som en authorization header i vår HttpClient.
+
+            //HttpContent i form av StringContent skapas, som innehåller vår mutation med alla properties vi vill hämta. Den postas även som en application/json för att det ska hanteras på rätt sätt (om man bara postar som en vanlig sträng får man 404 not found)
+            var query = new StringContent("{\"query\":\"query($id:Int!){getCourse(id:$id){title headerDescription description author price discountedPrice hours likes isBestSeller rating reviews imageUrl } }\", \"variables\":{\"id\":" + Id + "} }", System.Text.Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PostAsync(Configuration.GetValue<string>("GraphQLUrl"), query); //Vi gör en POST request till vårt GraphQL API
+
+            if (response.IsSuccessStatusCode)
+            {
+                //I verkliga scenarion bör man kanske kolla så att resultatet nedan inte innehåller något errors objekt, men nu skippar jag det
+                var result = await response.Content.ReadFromJsonAsync<JsonElement>(); //Innehållet i responsen läses ut från en Json sträng till ett JsonElement, som tillåter oss att köra GetProperty nedan
+                var courseJson = result.GetProperty("data").GetProperty("getCourse").ToString(); //Här kan vi alltså hämta properties från Json objektet vilket är smidigt i detta fallet, då vi får tillbaka ett "data" objekt som innehåller ett "getCourse" objekt, som i sin tur innehåller själva objektet vi faktiskt vill hämta ut.
+                Model = JsonConvert.DeserializeObject<SingleCourseModel>(courseJson)!; //Slutligen gör vi om strängen (eftersom vi körde ToString) till vår CourseCard model.
+            }
+        }
+        catch { }
+    }
+}

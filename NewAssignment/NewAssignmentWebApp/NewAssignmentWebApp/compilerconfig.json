@@ -38,5 +38,9 @@
   {
     "outputFile": "Components/Pages/Courses/Courses.razor.css",
     "inputFile": "Components/Pages/Courses/Courses.razor.scss"
+  },
+  {
+    "outputFile": "Components/Pages/SingleCourse/SingleCourse.razor.css",
+    "inputFile": "Components/Pages/SingleCourse/SingleCourse.razor.scss"
   }
 ]

@@ -3,8 +3,10 @@
 
 @page "/Courses"
 @using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
 @using Newtonsoft.Json
 @using System.Net.Http.Headers
+@attribute [Authorize]
 
 <PageTitle>Course</PageTitle>
 
@@ -33,7 +35,7 @@
                     }
 
                     <img src="@course.ImageUrl" alt=@course.Title>
-                    <a href="/SinglCourse/@course.Id" class="content-container">
+                    <a href="/SingleCourse/@course.Id" class="content-container">
                         <h3>@course.Title</h3>
                         <p class="author">By @course.Author</p>
 
@@ -69,20 +71,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var tokenResult = await HttpClient.GetAsync(Configuration.GetValue<string>("TokenProviderUrl")); //Vi gör en GET request till vår TokenProvider för att hämta vår token.
-        var token = await tokenResult.Content.ReadAsStringAsync(); //Vår token lagras som en sträng.
-        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);//Och sätts sedan som en authorization header i vår HttpClient.
-
-        //HttpContent i form av StringContent skapas, som innehåller vår query med alla properties vi vill hämta. Den postas även som en application/json för att det ska hanteras på rätt sätt (om man bara postar som en vanlig sträng får man 404 not found)
-        var query =  new StringContent("{\"query\":\"query{getAllCourses{id title author price discountedPrice hours likes likePercentage isBestSeller imageUrl } }\"}", System.Text.Encoding.UTF8, "application/json");
-
-        var response = await HttpClient.PostAsync(Configuration.GetValue<string>("GraphQLUrl"), query); //Vi gör en POST request till vårt GraphQL API
-        if (response.IsSuccessStatusCode)
+        try
         {
-            //I verkliga scenarion bör man kanske kolla så att resultatet nedan inte innehåller något errors objekt, men nu skippar jag det
-            var result = await response.Content.ReadFromJsonAsync<JsonElement>(); //Innehållet i responsen läses ut från en Json sträng till ett JsonElement, som tillåter oss att köra GetProperty nedan
-            var courseListJson = result.GetProperty("data").GetProperty("getAllCourses").ToString(); //Här kan vi alltså hämta properties från Json objektet vilket är smidigt i detta fallet, då vi får tillbaka ett "data" objekt som innehåller ett "getAllCourses" objekt, som i sin tur innehåller själva objektet vi faktiskt vill hämta ut.
-            CourseList = JsonConvert.DeserializeObject<IEnumerable<CourseCardModel>>(courseListJson); //Slutligen gör vi om strängen (eftersom vi körde ToString) till vår CourseCard model.
+            var tokenResult = await HttpClient.GetAsync(Configuration.GetValue<string>("TokenProviderUrl")); //Vi gör en GET request till vår TokenProvider för att hämta vår token.
+            var token = await tokenResult.Content.ReadAsStringAsync(); //Vår token lagras som en sträng.
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);//Och sätts sedan som en authorization header i vår HttpClient.
+
+            //HttpContent i form av StringContent skapas, som innehåller vår query med alla properties vi vill hämta. Den postas även som en application/json för att det ska hanteras på rätt sätt (om man bara postar som en vanlig sträng får man 404 not found)
+            var query = new StringContent("{\"query\":\"query{getAllCourses{id title author price discountedPrice hours likes likePercentage isBestSeller imageUrl } }\"}", System.Text.Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PostAsync(Configuration.GetValue<string>("GraphQLUrl"), query); //Vi gör en POST request till vårt GraphQL API
+            if (response.IsSuccessStatusCode)
+            {
+                //I verkliga scenarion bör man kanske kolla så att resultatet nedan inte innehåller något errors objekt, men nu skippar jag det
+                var result = await response.Content.ReadFromJsonAsync<JsonElement>(); //Innehållet i responsen läses ut från en Json sträng till ett JsonElement, som tillåter oss att köra GetProperty nedan
+                var courseListJson = result.GetProperty("data").GetProperty("getAllCourses").ToString(); //Här kan vi alltså hämta properties från Json objektet vilket är smidigt i detta fallet, då vi får tillbaka ett "data" objekt som innehåller ett "getAllCourses" objekt, som i sin tur innehåller själva objektet vi faktiskt vill hämta ut.
+                CourseList = JsonConvert.DeserializeObject<IEnumerable<CourseCardModel>>(courseListJson); //Slutligen gör vi om strängen (eftersom vi körde ToString) till vår CourseCard model.
+            }
         }
+        catch{ }
     }
 }

@@ -34,5 +34,9 @@
   {
     "outputFile": "Components/Pages/Account/Security/Security.razor.css",
     "inputFile": "Components/Pages/Account/Security/Security.razor.scss"
+  },
+  {
+    "outputFile": "Components/Pages/Courses/Courses.razor.css",
+    "inputFile": "Components/Pages/Courses/Courses.razor.scss"
   }
 ]

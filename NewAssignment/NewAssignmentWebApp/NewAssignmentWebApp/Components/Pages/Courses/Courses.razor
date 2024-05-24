@@ -1,0 +1,93 @@
+﻿@inject HttpClient HttpClient
+@inject IConfiguration Configuration
+
+@page "/Courses"
+@using System.Text.Json
+
+<PageTitle>Course</PageTitle>
+
+<section class="courses">
+    <div class="breadcrumbs">
+        <i class="fa-regular fa-house"></i>
+        <a href="/">Home</a>
+        <i class="fa-regular fa-chevrons-right"></i>
+        <p>Courses</p>
+    </div>
+    <div class="heading-and-categories">
+        <h1>Courses</h1>
+        <div class="inputs">
+        </div>
+    </div>
+    <div id="courses-grid" class="courses-grid">
+        @if (CourseList != null)
+        {
+            foreach (var course in CourseList)
+            {
+                <div class="grid-container">
+
+                    @if (course.IsBestSeller)
+                    {
+                        <div class="best-seller">Best Seller</div>
+                    }
+
+                    <img src="@course.ImageUrl" alt=@course.Title>
+                    <a href="/SinglCourse/@course.Id" class="content-container">
+                        <h3>@course.Title</h3>
+                        <p class="author">By @course.Author</p>
+
+                        @if (course.DiscountedPrice != null)
+                        {
+                            <p class="discounted-price">$@course.DiscountedPrice <span>$@course.Price</span></p>
+                        }
+
+                        else
+                        {
+                            <p class="price">$@course.Price</p>
+                        }
+                        <div>
+                            <i class="fa-regular fa-clock"></i>
+                            <p>@course.Hours hours</p>
+                            <i class="fa-regular fa-thumbs-up"></i>
+
+                            @if (course.LikePercentage != null && course.Likes != null)
+                            {
+                                <p>@course.LikePercentage% (@(course.Likes / 1000)K)</p>
+                            }
+
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+    </div>
+</section>
+
+@code {
+    private IEnumerable<CourseCardModel>? CourseList { get; set; } = new List<CourseCardModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GraphQLQuery() { Query = "query{getAllCourses{id title author price discountedPrice hours likes likePercentage isBestSeller imageUrl } }" };
+
+
+
+        // var result = await HttpClient.PostAsJsonAsync(Configuration.GetValue<string>("GraphQLUrl"), query);
+        // if (result.IsSuccessStatusCode)
+        // {
+        //     var response = await result.Content.ReadFromJsonAsync<JsonElement>();
+        //     CourseList = response.GetProperty("data").GetProperty("getAllCourses").EnumerateArray().Select(course => new CourseCardModel()
+        //     {
+        //         Id = course.GetProperty("id").GetInt32(),
+        //         Title = course.GetProperty("title").GetString()!,
+        //         Author = course.GetProperty("author").GetString()!,
+        //         Price = course.GetProperty("price").GetDecimal(),
+        //         DiscountedPrice = course.GetProperty("discountedPrice").GetDecimal(),
+        //         Hours = course.GetProperty("hours").GetInt32(),
+        //         Likes = course.GetProperty("likes").GetInt32(),
+        //         LikePercentage = course.GetProperty("likePercentage").GetInt32(),
+        //         IsBestSeller = course.GetProperty("isBestSeller").GetBoolean(),
+        //         ImageUrl = course.GetProperty("imageUrl").GetString()!,
+        //     });
+        // }
+    }
+}

@@ -38,6 +38,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => {
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddScoped<CookieEvents>();
 
 builder.Services.ConfigureApplicationCookie(options =>
